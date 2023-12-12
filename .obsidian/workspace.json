@@ -1,0 +1,234 @@
+{
+  "main": {
+    "id": "3fe259e023a8b28a",
+    "type": "split",
+    "children": [
+      {
+        "id": "fee32fa6b3f4befa",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "892d08688446b38a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Index.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "3ee492d4f009a798",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/Drawing 2023-12-11 19.32.49.excalidraw.md"
+              }
+            }
+          },
+          {
+            "id": "9310cb19228cdb65",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/Drawing 2023-12-11 18.32.48.excalidraw.md"
+              }
+            }
+          },
+          {
+            "id": "4d73e147b4f73f53",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/Drawing 2023-12-11 18.36.35.excalidraw.md"
+              }
+            }
+          },
+          {
+            "id": "6f085e79e23d101b",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/Drawing 2023-12-11 19.26.59.excalidraw.md"
+              }
+            }
+          },
+          {
+            "id": "730c84379ba98cb5",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/Drawing 2023-12-11 19.31.03.excalidraw.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "9e61c9c6a907ab51",
+    "type": "split",
+    "children": [
+      {
+        "id": "17512f7e1e459fd6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bf6f4af1cefd8d80",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "dfb1e90d0892fd53",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "708a91c42291cf1f",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "99c5eb1a0b33ba3a",
+    "type": "split",
+    "children": [
+      {
+        "id": "c4ffa476c32c0e3f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ec5c8a1c34b21ab0",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Index.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "49b72f54d429420f",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Index.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "7539e6b9fddbf4ca",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "2ee5df9a413f44a5",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Index.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "obsidian-excalidraw-plugin:Create new drawing": false
+    }
+  },
+  "active": "892d08688446b38a",
+  "lastOpenFiles": [
+    "Mathematical Analysis 1/Primitive Functions of Rational Functions.md",
+    "Mathematical Analysis 1/Extrema, Critical Points and French Theorems.md",
+    "Mathematical Analysis 1/!Mathematical Analysis 1.md",
+    "Mathematical Analysis 1/Primitive Functions.md",
+    "Mathematical Analysis 1/Landau Symbols.md",
+    "Mathematical Analysis 1/Differential Calculus.md",
+    "Mathematical Analysis 1/Principal Part.md",
+    "Differential Calculus.md^cfa238.md",
+    "Differential.md",
+    "^.md",
+    "Mathematical Analysis 1/Integral Calculus.md",
+    "Mathematical Analysis 1/Taylor Expansions.md",
+    "Mathematical Analysis 1/Infinitesimal and Infinite.md",
+    "Mathematical Analysis 1/Asymptotes.md",
+    "Mathematical Analysis 1/Convexity and Concavity.md",
+    "Mathematical Analysis 1/De l'Hopital's Rule.md",
+    "Mathematical Analysis 1/Derivatives of Increasing and Decreasing Functions.md",
+    "Excalidraw/Drawing 2023-12-11 19.32.49.excalidraw.md",
+    "Excalidraw/Drawing 2023-12-11 19.31.03.excalidraw.md",
+    "Excalidraw/Drawing 2023-12-11 19.26.59.excalidraw.md",
+    "Excalidraw/Drawing 2023-12-11 18.36.35.excalidraw.md",
+    "Excalidraw/Drawing 2023-12-11 18.32.48.excalidraw.md",
+    "Excalidraw/Drawing 2023-12-11 16.10.54.excalidraw.md",
+    "Index.md",
+    "Mathematical Analysis 1/Pasted image 20231211161646.png",
+    "Excalidraw",
+    "Chemistry/Chemistry.md",
+    "Computer Science/Computer Science.md",
+    "Chemistry",
+    "Computer Science",
+    "Mathematical Analysis 1"
+  ]
+}
