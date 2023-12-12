@@ -11,3 +11,5 @@
 - [[Taylor Expansions]]
 - [[Integral Calculus]]
 	- [[Primitive Functions]]
+		 - [[Primitive Functions of Rational Functions]]
+- [[The Riemann Integral]]
