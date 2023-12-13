@@ -1,5 +1,8 @@
 ## Index
 **Go Back To** [[!Mathematical Analysis 1]]
+**Move Further To**
+- [[Properties of Definite Integrals]]
+- [[The Integral Mean Value Theorem]]
 ## Step Functions
 Intuitive idea of The Riemann Integrals is to approximate the are with the sum-of-rectangle areas of *upper* and *lower* **step functions**.
 ![[Pasted image 20231212212046.png]]
