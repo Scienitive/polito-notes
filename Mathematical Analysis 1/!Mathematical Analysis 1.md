@@ -14,5 +14,5 @@
 		 - [[Primitive Functions of Rational Functions]]
 - [[The Riemann Integral]]
 	- [[Properties of Definite Integrals]]
-	 - [[The Integral Mean Value Theorem]]
-	  - [[Fundamental Theorem of Calculus]]
+	- [[The Integral Mean Value Theorem]]
+	- [[Fundamental Theorem of Calculus]]
