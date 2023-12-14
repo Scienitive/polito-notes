@@ -1,4 +1,4 @@
 ## First Year
 - [[!Mathematical Analysis 1]]
-- [[Chemistry]]
+- [[!Chemistry]]
 - [[Computer Science]]
