@@ -16,3 +16,4 @@
 	- [[Properties of Definite Integrals]]
 	- [[The Integral Mean Value Theorem]]
 	- [[Fundamental Theorem of Calculus]]
+	- [[Improper Integrals]]
