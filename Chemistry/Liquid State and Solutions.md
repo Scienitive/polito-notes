@@ -206,6 +206,8 @@ $$
 #### Electrolytic Solutions
 So far all of the colligative property formulas that we obtain was for *non-electrolyte* solutions.
 To make them work for *electrolyte* solutions we need to adjust them.
+
+**NOTE:** $HF$ and $CH_3CO_2H$ are the only *weak electrolytes* other electrolytes are *strong*.
 ##### Dissociation Degree $(\alpha)$
 $$
 \alpha = \frac{c_{diss}}{c_{init}} \cdot 100\%
