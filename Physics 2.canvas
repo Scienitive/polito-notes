@@ -1,9 +1,26 @@
 {
 	"nodes":[
 		{"id":"86549552e1700dd9","x":-20,"y":-92,"width":340,"height":232,"type":"text","text":"# Electric Field $(\\vec{E})$\n\nForce per unit charge\n\n$$\n\\vec{E} = \\frac{F}{q} = k\\frac{Q}{r^2}\n$$\n\nUnit: $\\frac{V}{m} = \\frac{N}{C}$"},
-		{"id":"04134c409ad435ab","type":"text","text":"# Magnetic Field $(\\vec{B})$\n\nInfluences moving charges via Lorentz Force\nUnit: $T$","x":480,"y":-92,"width":340,"height":172},
-		{"id":"9399932dd15b5282","x":165,"y":241,"width":415,"height":219,"type":"text","text":"## Coulomb's Law\nDefines the electrostatic force of attraction or repulsion between two stationary, charged particles.\n\n$$\nF = k\\frac{q_1 \\cdot q_2}{r^2}\n$$\n"},
-		{"id":"b895904d4157f646","x":740,"y":140,"width":420,"height":360,"type":"text","text":"## Charge Densities\n\n#### Linear Charge Density\n$$\n\\lambda = \\frac{q}{\\ell}\n$$\n\n#### Surface Charge Density\n$$\n\\sigma = \\frac{q}{S}\n$$\n\n#### Volume Charge Density\n$$\n\\rho = \\frac{q}{\\tau}\n$$"}
+		{"id":"35ec65a21eacae69","x":-440,"y":220,"width":453,"height":327,"type":"text","text":"### Electric Field Line Properties\n\n- **Direction:** They always start on positive charges and end on negative charges\n- **No Closed Loops:** Electrostatic field lines do not form closed loops, as they cannot start and end on the same charge.\n- **Never Intersect:** Field lines can never cross each other. If they did, it would mean the electric field has two different directions at a single point, which is impossible."},
+		{"id":"b895904d4157f646","x":320,"y":220,"width":420,"height":360,"type":"text","text":"## Charge Densities\n\n#### Linear Charge Density\n$$\n\\lambda = \\frac{q}{\\ell}\n$$\n\n#### Surface Charge Density\n$$\n\\sigma = \\frac{q}{S}\n$$\n\n#### Volume Charge Density\n$$\n\\rho = \\frac{q}{\\tau}\n$$"},
+		{"id":"4f54b1c015bcfe91","x":-213,"y":788,"width":483,"height":311,"type":"text","text":"### Field of a uniformly charged line segment\n\nAt large distances from the segment $(r > \\ell)$:\n$$\n\\vec{E} = \\frac{q}{4 \\pi \\epsilon_0 r^2}\n$$\nThe electric field is same as a point charge.\n\nWhen the segment is infinitely long $(r < \\ell)$\n$$\n\\vec{E} = \\frac{\\lambda}{2 \\pi \\epsilon_0 r}\n$$"},
+		{"id":"46007b021f6b4ccd","x":320,"y":788,"width":478,"height":306,"type":"text","text":"### Field of a uniformly charged infinite sheet\n\n$$\n\\vec{E} = \\frac{\\sigma}{2 \\epsilon_0}\n$$\nSo the electric field produced by an infinite plane sheet of charge is *independent of the distance* from the sheet."},
+		{"id":"b7adaad4d8173811","x":865,"y":748,"width":591,"height":392,"type":"text","text":"### Two parallel planes\n\nLet's suppose we have two large plates with uniform surface charges $\\pm \\sigma$ separated by $d$.\n\nWe know that single sheet:\n$$\n\\vec{E}_{\\mathrm{sheet}} = \\frac{\\sigma}{2 \\epsilon_0}\n$$\nIn this case we'll have two cases, one between the plates (inside), one outside of the plates (outside):\n$$\n\\vec{E}_{\\mathrm{inside}} = \\frac{\\sigma}{\\epsilon_0}\n$$\n$$\n\\vec{E}_{\\mathrm{outside}} \\approx 0\n$$\n"},
+		{"id":"9399932dd15b5282","x":270,"y":-709,"width":415,"height":219,"type":"text","text":"## Coulomb's Law\nDefines the electrostatic force of attraction or repulsion between two stationary, charged particles.\n\n$$\nF = k\\frac{q_1 \\cdot q_2}{r^2}\n$$\n"},
+		{"id":"f1087832472fe02e","x":320,"y":-428,"width":316,"height":201,"type":"text","text":"### Motion of a charge in an electrostatic field\n\nWe use this formula for calculating this type of problems:\n$$\nqE = ma\n$$"},
+		{"id":"04134c409ad435ab","type":"text","text":"# Magnetic Field $(\\vec{B})$\n\nInfluences moving charges via Lorentz Force\nUnit: $T$","x":821,"y":-178,"width":340,"height":172},
+		{"id":"fd22e8c413ffbb5c","x":-1720,"y":-227,"width":518,"height":274,"type":"text","text":"## Electrostatic Potential Energy $\\to U$\n$$\nU = k \\frac{q_1 \\cdot q_2}{r}\n$$\nElectrostatic Potential Energy is the amount of *work* needed to be done to keep $q_1$ and $q_2$ at $r$ distance.\nBecause $q_1$ and $q_2$ are charges they either attract or repel each other. So to keep them fixed at distance $r$ some work has to be done."},
+		{"id":"df5773de2dbeae0f","x":-1160,"y":-227,"width":600,"height":281,"type":"text","text":"## Electrostatic Potential $\\to V$\n$$\nV_p = k \\frac{q}{r}\n$$\nElectrostatic Potential is pretty similar to Electrostatic Potential Energy.\nWe basically divide the Electrostatic Potential Energy with one of the charges.\nAnd it defines *the work per unit charge* that needs to be done to go from $\\infty \\to p$\n$p$ represents a point in space here."},
+		{"id":"97ca0a625776c173","x":-960,"y":252,"width":457,"height":263,"type":"text","text":"### Relationship between Electric Field $(\\vec{E})$ and Electrostatic Potential $(V)$\n\nThe electric field is the *negative gradient* of the electrostatic potential.\nThis means the electric field points in the direction where the potential decreases most rapidly.\n$$\n\\vec{E} = -\\nabla V\n$$"}
 	],
-	"edges":[]
+	"edges":[
+		{"id":"bcdb77418557c74a","fromNode":"b895904d4157f646","fromSide":"bottom","toNode":"4f54b1c015bcfe91","toSide":"top"},
+		{"id":"05819471554330e1","fromNode":"b895904d4157f646","fromSide":"bottom","toNode":"46007b021f6b4ccd","toSide":"top"},
+		{"id":"0dc8406428c069e8","fromNode":"b895904d4157f646","fromSide":"bottom","toNode":"b7adaad4d8173811","toSide":"top"},
+		{"id":"c09ca674cebc2050","fromNode":"86549552e1700dd9","fromSide":"bottom","toNode":"35ec65a21eacae69","toSide":"top"},
+		{"id":"96b6dfeccf4f578f","fromNode":"9399932dd15b5282","fromSide":"bottom","toNode":"f1087832472fe02e","toSide":"top"},
+		{"id":"ed7e88d44321ac0d","fromNode":"86549552e1700dd9","fromSide":"bottom","toNode":"b895904d4157f646","toSide":"top"},
+		{"id":"6add2d075a83b302","fromNode":"df5773de2dbeae0f","fromSide":"bottom","toNode":"97ca0a625776c173","toSide":"top"},
+		{"id":"6c7f4e47b5ad10ee","fromNode":"86549552e1700dd9","fromSide":"left","toNode":"97ca0a625776c173","toSide":"top"}
+	]
 }
