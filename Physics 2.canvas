@@ -1,0 +1,9 @@
+{
+	"nodes":[
+		{"id":"86549552e1700dd9","x":-20,"y":-92,"width":340,"height":232,"type":"text","text":"# Electric Field $(\\vec{E})$\n\nForce per unit charge\n\n$$\n\\vec{E} = \\frac{F}{q} = k\\frac{Q}{r^2}\n$$\n\nUnit: $\\frac{V}{m} = \\frac{N}{C}$"},
+		{"id":"04134c409ad435ab","type":"text","text":"# Magnetic Field $(\\vec{B})$\n\nInfluences moving charges via Lorentz Force\nUnit: $T$","x":480,"y":-92,"width":340,"height":172},
+		{"id":"9399932dd15b5282","x":165,"y":241,"width":415,"height":219,"type":"text","text":"## Coulomb's Law\nDefines the electrostatic force of attraction or repulsion between two stationary, charged particles.\n\n$$\nF = k\\frac{q_1 \\cdot q_2}{r^2}\n$$\n"},
+		{"id":"b895904d4157f646","x":740,"y":140,"width":420,"height":360,"type":"text","text":"## Charge Densities\n\n#### Linear Charge Density\n$$\n\\lambda = \\frac{q}{\\ell}\n$$\n\n#### Surface Charge Density\n$$\n\\sigma = \\frac{q}{S}\n$$\n\n#### Volume Charge Density\n$$\n\\rho = \\frac{q}{\\tau}\n$$"}
+	],
+	"edges":[]
+}

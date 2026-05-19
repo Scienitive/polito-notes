@@ -5,4 +5,8 @@
 - [[Liquid State and Solutions]]
 - [[Solid State]]
 - [[Chemical Equilibria]]
+- [[Acids, Bases and Salts]]
 - [[Acids, Bases and Salts (Class)]]
+- [[Buffers, Indicators, Solubility]]
+- [[Electrochemistry]]
+- [[Chemical Kinetics]]
