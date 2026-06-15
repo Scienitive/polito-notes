@@ -554,10 +554,10 @@ The goals of this phase are:
 
 The controller will always be in this form:
 $$
-C_{ss}(s) = \frac{K_c}{s^h}
+C_{ss}(s) = \frac{K_c}{s^{g_c}}
 $$
 - $K_c \to$ Gain
-- $h \to$ Number of integrators added by the controller
+- $g_c \to$ Number of integrators added by the controller
 ### Step 1 (Isolate the Steady-State Requirements)
 Check the list of requirements, for steady-state we're looking for things like: $|e_r^\infty|$, $|y_{d_a}^\infty|$, $|y_{d_y}^\infty|$
 - **IGNORE:** Any requirement where the input signal is a sine wave like $sin(\omega t)$. We'll handle them in Phase 3.
@@ -585,6 +585,9 @@ After determining the number of integrators needed for the system you need to ch
 
 Count how many integrators your plant $G(s)$ already has. Your controller $C_{ss}(s)$ must supply whatever is missing to reach the required total.
 (e.g., If the system needs 1 integrator, and $G(s)$ has 0, your controller needs $1/s$. If $G(s)$ already has an $s$ in the denominator, your controller needs 0).
+$$
+g_c = \text{Required Integrators} - \text{Plant Integrators}
+$$
 ### Step 3 (Come up with the correct Transfer Function)
 You only need to find the transfer function for the specific requirement(s) that determined your maximum $h$ in Step 2.
 **NOTE:** If two requirements demanded the exact same maximum $h$, you calculate for both and pick the larger $K_c$
@@ -620,11 +623,11 @@ U_s = laplace(input_t, t, s);
 
 % 2. Define the Plant and Controller Symbolically
 G_sym = 40 / ((s + 5.72)*(s - 1.72));
-% Controller is Kc / s^h, so if you have h=1:
-C_sym = Kc / s;
+gc = 0;
+c_sym = Kc / s^gc;
 
 % 3. Define the Transfer Function W(s)
-W_sym = 1 / (1 + C_sym * G_sym);
+W_sym = 1 / (1 + c_sym * G_sym);
 
 % 4. Apply the Final Value Theorem
 FVT_result = limit(s * W_sym * U_s, s, 0);
@@ -646,8 +649,8 @@ disp(Kc_min);
 Before starting this phase, you need to define $K_c$ and Controller using standard `tf` variables:
 ```matlab
 Kc = 2.0; % The safe value you found in Phase 2
-Css = Kc / s; % Use Kc/s if h=1, Kc/s^2 if h=2, or just Kc if h=0
-C = Css;
+c_ss = Kc / s; % Use Kc/s if h=1, Kc/s^2 if h=2, or just Kc if h=0
+c = c_ss; % Initialize the official continuous controller variable
 ```
 ### Step 1 (Translate Requirements to Math)
 #### 1) High-Frequency Noise $(|y_{d_t}^\infty|) \to$ Attenuation Boundary $(M_{T\_HF})$
@@ -657,12 +660,18 @@ $$
 M_{T\_HF} =  20 \log_{10}\left(\frac{\text{Output Limit}}{\text{Input Amplitude}}\right)
 $$
 - **Example:** If $d_t(t) = 0.1\sin(90t)$ and limit is $\le 0.01$, then $M_{T\_HF} = 20 \log_{10}\left(\frac{0.01}{0.1}\right) = -20 \text{ dB}$.
-#### 2) Rise Time $(t_r) \to$ Target Crossover Frequency $(\omega_{c,des})$
+#### 2) Low-Frequency Disturbance $(|e_r^\infty| \text{ or } |y_{d_a}^\infty|) \to$ LF Boundary $(M_S^{LF})$
+You're gonna do this only if the question gives a slow sinusoidal input, e.g., $\omega \leq 1 \text{ rad/s}$
+- **Formula:**
+$$
+M_{S}^{LF} = 20 \log_{10}\left(\frac{\text{Output Limit}}{\text{Input Amplitude}}\right)
+$$
+#### 3) Rise Time $(t_r) \to$ Target Crossover Frequency $(\omega_{c,des})$
 - **Formula:**
 $$
 \omega_{c,des} \ge \frac{1.8}{t_r}
 $$
-#### 3) Overshoot ($\hat{S}$) $\to$ Nichols Exclusion Circles ($T_p$ and $S_p$)
+#### 4) Overshoot ($\hat{S}$) $\to$ Nichols Exclusion Circles ($T_p$ and $S_p$)
 Open the `diagrams_translation_requirements.pdf` file provided during the exam and follow these three steps:
 - **Find $\zeta$:** Go to the first chart ($\hat{S}$ vs $\zeta$). Find your maximum overshoot percentage on the Y-axis (e.g., 20), trace horizontally to the curve, and read the corresponding $\zeta$ value on the X-axis.
 - **Find $T_p$:** Go to the second chart ($d$ or $T_p$ vs $\zeta$). Find your $\zeta$ on the X-axis, trace vertically to the curve, and read the $T_p$ value on the Y-axis.
@@ -681,6 +690,7 @@ So at the end you'll have these:
 ```matlab
 wc_des = 1.85 / t_r_limit;
 M_T_HF = 20 * log10(noise_output_limit / noise_input_amp);
+M_S_LF = 20 * log10(0.05 / 1); % Only if low-freq sine is present
 T_p = 20 * log10(Tp_linear);
 S_p = 20 * log10(S_p_linear);
 ```
@@ -696,6 +706,7 @@ hold on
 T_grid(T_p)
 S_grid(S_p)
 T_grid(M_T_HF)
+% S_grid(M_S_LF) % Uncomment if you have a low-frequency requirement`
 ```
 #### How to read the Nichols Chart
 ![[Pasted image 20260615123923.png]]
@@ -713,17 +724,102 @@ T_grid(M_T_HF)
 Anchor the zero slightly behind your target crossover frequency ($\omega_{c,des}$) using a tuning factor (`wnorm`), usually between **2 and 6**.
 ```matlab
 wnorm = 3; % TUNE THIS: Adjust between 2 and 6
-wZ = wc_des / wnorm;
-C_Z = 1 + (s / wZ);
+wD = wc_des / wnorm;
+c_Z = 1 + (s / wD);
 
 % Try Option A first. Run the script.
 % If the green line still crashes into the circles, comment it out and use Option B.
 
 % Option A: Single Zero (Moderate Pull)
-C = C * C_Z; 
+c = c * c_Z; 
 % Option B: Double Zero (Heavy Pull)
-% C = C * C_Z * C_Z; 
+% c = c * c_Z * c_Z; 
 
-L2 = C * G * G_ZOH;
+L2 = c * G * G_ZOH;
 nichols(L2, 'g'); % Plot the new shape in green
 ```
+**NOTE:** You want a visible, comfortable gap between green line and the circles.
+### Step 4 (Move 2: The Gain Adjustment - Fixing the Speed)
+**The Goal:** The curve now has a safe shape, but it crosses the horizontal 0 dB line at the wrong speed. We must slide the entire curve straight up or down so it crosses 0 dB exactly at our target $\omega_{c,des}$.
+
+**The Action:** We place a visible marker on the green curve exactly at $\omega_{c,des}$. Look at its Y-axis (dB) value. If the marker is sitting at -6 dB, apply a gain of +6 dB to push it up to 0. If it is at +14 dB, apply -14 dB to pull it down.
+```matlab
+% Drop a circle on the green line exactly at the target frequency
+nichols(L2, wc_des, 'o'); 
+
+gain_dB = 6; % OVERRIDE THIS: Read the exact gap visually from the chart
+K_adj = 10^(gain_dB / 20); % Convert dB back to a linear multiplier
+
+c = c * K_adj;
+L3 = c * G * G_ZOH;
+
+nichols(L3, 'm'); % Plot the adjusted curve in magenta
+nichols(L3, wc_des, 'o'); % Verify the marker sits exactly on the 0 dB line
+```
+### Step 5 (Move 3: The Closure Pole - Killing the Noise)
+**The Goals:**
+- *Kill the Noise:* Drop the high-frequency tail fast enough so that the specific noise frequency mile-marker ($\omega_t$) sits safely below the $M_{T\_HF}$ ceiling.
+- *Make it Proper (Avoid 0 Points):* The final controller MUST have at least as many poles as zeros. You must balance whatever you added in Step 3 to ensure the controller is physically possible to build.
+
+**The Rule for Poles:**
+- If you used a **Single Zero** in Step 3 $\rightarrow$ Use a **Single Pole** here. (If your $g_c$ from Phase 2 was 0, this makes it exactly proper. If $g_c$ was 1, it's strictly proper and helps kill noise).
+- If you used a **Double Zero** in Step 3 $\rightarrow$ Use a **Double Pole** here.
+
+**The Action:** Place the poles far to the right of the zeros (multiplying $\omega_Z$ by a factor like 20, 30, or 60) so they don't drag the middle of the curve back into the Danger Zone.
+```matlab
+mD = 30; % TUNE THIS: Adjust multiplier (20, 30, 60) to drop the tail safely
+wP = mD * wD; % This is the Pole of our Lead Network
+
+% Match this to what you chose in Step 3:
+% Option A: Single Pole (Use if you chose Single Zero in Step 3)
+c_P = 1 / (1 + (s / wP)); 
+
+% Option B: Double Pole (Use if you chose Double Zero in Step 3)
+% c_P = 1 / (1 + (s / wP))^2; 
+
+c = c * c_P;
+L4 = c * G * G_ZOH;
+
+nichols(L4, 'r'); % Plot the final continuous system in red
+
+% Verify the noise frequency is below the ceiling
+w_t = 100; % Replace 100 with the specific noise frequency from your exam
+nichols(L4, w_t, '*'); % Drops a star on the red line to verify it is below the blue grid
+```
+## Phase 4 (Discretization & Final Delivery)
+**The Goals of this phase are:**
+- Convert the continuous-time controller $C(s)$ into a discrete-time controller $C_d(z)$ that a digital microprocessor can run.
+- Extract the exact numbers needed to fill out your Word Document report `s123456_report.docx`.
+- Rename your variables to strictly match the professor's grading script and save your workspace.
+### Step 1 (The Digital Conversion - Tustin Method)
+Computers don't understand the continuous s-domain. We must mathematically translate $C(s)$ into the digital z-domain.
+We use MATLAB's `c2d` command with the *Tustin (bilinear)* approximation method.
+```matlab
+Cd = c2d(c, T_s, 'tustin');
+```
+### Step 2 (Formatting the Report)
+Exam report requires us to write our final $C(s)$ in "dc-gain form" and write our $C_d(z)$ as well.
+We use `zpk()` function to automatically factor the equations, Perfectly isolating our zeros $(\omega_Z)$ and poles $(\omega_P)$ so we can just copy the numbers directly to report
+```matlab
+disp('--- LEAD NETWORK VARIABLES FOR THE REPORT ---');
+fprintf('wD = %.4f\n', wD);
+fprintf('mD = %d\n', mD);
+fprintf('Kc = %.4f\n', Kc * K_adj); % Total final gain
+
+disp('--- DIGITAL CONTROLLER Cd(z) FOR REPORT ---');
+zpk(Cd)
+```
+### Step 3 (Exam Naming Rules & Saving)
+To be honest I don't like this step too much, instead of thinking about this let's just create the variables in their right names.
+
+To save you need to:
+```matlab
+save('s123456.mat');
+```
+### Step 4 (Simulink Verification)
+We now need to create `s123456_sim.slx` file.
+- Build the block diagram exactly as it looks in the exam prompt picture.
+- Put your digital controller `Cd` in the controller block.
+- Put `G` in the plant block.
+- **Testing Step Requirements:** Connect a Step block to the input. Attach a Scope to the error signal ($e$). Look at the final steady-state number on the scope and write it in your report.
+- **Testing Sine Requirements:** Connect a Sine Wave block to the input (set frequency to $\omega_t$ and amplitude to $\delta_t$). Attach a Scope to the output ($y$). Measure the amplitude of the output wave and ensure it is below the noise limit, then write that number in your report.
