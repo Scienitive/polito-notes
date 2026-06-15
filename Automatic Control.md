@@ -538,3 +538,192 @@ And remember all of this in the Laplace world $(s)$!
 		- **NOTE:** The frequency of the DC Component is always 0.
 	- **AC Component (Sine Wave):** $u_2(t) = 3sin(0.1t)$. The frequency $\omega = 0.1$ here.
 - LAB3 Problem 5 and Problem 6 notes haven't been prepared.
+# Part 2 Questions Step by Step
+## Phase 1 (Initial Setup)
+We define these values based on the question.
+```matlab
+s = tf('s');
+G = 120 / (s^3 + 15.8*s^2 + 12*s); 
+T_s = 0.015;
+G_ZOH = 1 / (1 + s * T_s / 2);
+```
+## Phase 2 (Building Static Controller  $C_{ss}(s)$)
+The goals of this phase are:
+- Establish the *System Type* (how many integrators do we need)
+- Calculate the minimum static gain $(K_c)$ required to satisfy the steady-state constraints.
+
+The controller will always be in this form:
+$$
+C_{ss}(s) = \frac{K_c}{s^h}
+$$
+- $K_c \to$ Gain
+- $h \to$ Number of integrators added by the controller
+### Step 1 (Isolate the Steady-State Requirements)
+Check the list of requirements, for steady-state we're looking for things like: $|e_r^\infty|$, $|y_{d_a}^\infty|$, $|y_{d_y}^\infty|$
+- **IGNORE:** Any requirement where the input signal is a sine wave like $sin(\omega t)$. We'll handle them in Phase 3.
+- **KEEP:** Requirements where the input signal is a step $(\epsilon(t))$ or a ramp $(t\epsilon(t))$
+### Step 2 (Determine the number of integrators $h$ needed for the system)
+For each requirement we keep we'll do this:
+**NOTE:** By input we mean $d_a$ for $|y_{d_a}^\infty|$ for example.
+#### If the Input is Step $\epsilon(t)$:
+- If target is zero $(= 0)$: System needs *1* total integrator.
+- If target is finite $(\text{e.g.}\leq 0.5)$: System needs *0* total integrator.
+#### If the Input is Ramp $t\epsilon(t)$:
+- If target is zero $(= 0)$: System needs *2* total integrator.
+- If target is finite $(\text{e.g.}\leq 0.5)$: System needs *1* total integrator.
+#### If the Input is Parabola $t^2\epsilon(t)$:
+- If target is zero $(= 0)$: System needs *3* total integrator.
+- If target is finite $(\text{e.g.}\leq 0.5)$: System needs *2* total integrator.
+
+After calculating this for each requirement, we just need the *maximum* value that we got from any requirement. That will be our number.
+
+After determining the number of integrators needed for the system you need to check how many integrators does our plant $G(s)$ already has
+- Checking this is fairly easy, just group the $s$ together in the denominator of $G(s)$.
+- If there's a single $s$ standing there that means we have one integrator
+- If there's $s^2$, that means we have two integrators.
+- If it's just like $(s + 2)(s - 5)$, as you can see there's no single $s$ standing there so we have zero integrators
+
+Count how many integrators your plant $G(s)$ already has. Your controller $C_{ss}(s)$ must supply whatever is missing to reach the required total.
+(e.g., If the system needs 1 integrator, and $G(s)$ has 0, your controller needs $1/s$. If $G(s)$ already has an $s$ in the denominator, your controller needs 0).
+### Step 3 (Come up with the correct Transfer Function)
+You only need to find the transfer function for the specific requirement(s) that determined your maximum $h$ in Step 2.
+**NOTE:** If two requirements demanded the exact same maximum $h$, you calculate for both and pick the larger $K_c$
+
+To find the relationship between one specific input and output, use the principle of **Superposition**: turn all other external inputs in the master equations to $0$.
+
+From the block diagram you need to extract master equations like this first:
+- $y = d_y + u \cdot G(s)$
+- $u = d_a + e \cdot C(s)$
+- $e = r - (y + d_t)$
+Substitute them into each other for your specific input. For standard exams, they always resolve to one of these three common forms. Let's call the transfer function $W(s)$:
+- **For Reference Tracking ($e_r$):** Set $d_a, d_y, d_t = 0$. Solve for $e/r$.
+$$W(s) = \frac{1}{1 + C(s)G(s)}$$
+- **For Actuator Disturbance ($y_{d_a}$):** Set $r, d_y, d_t = 0$. Solve for $y/d_a$.
+$$W(s) = \frac{G(s)}{1 + C(s)G(s)}$$
+- **For Output Disturbance ($y_{d_y}$):** Set $r, d_a, d_t = 0$. Solve for $y/d_y$.
+$$W(s) = \frac{1}{1 + C(s)G(s)}$$
+### Step 4 (Calculating $K_c$)
+We use Final Value Theorem (FVT) here. It calculates exactly what the system output settles to as time goes to infinity.
+
+The master formula:
+$$\text{Final Value} = \lim_{s \to 0} s \cdot W(s) \cdot U(s)$$
+But you don't need that we can do this step on Matlab:
+```matlab
+% Boot up symbolic variables
+syms s t Kc
+
+% 1. Define the Time-Domain Input and Convert to S-Domain
+% For a step of 0.4: input_t = 0.4;
+% For a ramp of 2t: input_t = 2 * t;
+input_t = 2 * t;
+U_s = laplace(input_t, t, s);
+
+% 2. Define the Plant and Controller Symbolically
+G_sym = 40 / ((s + 5.72)*(s - 1.72));
+% Controller is Kc / s^h, so if you have h=1:
+C_sym = Kc / s;
+
+% 3. Define the Transfer Function W(s)
+W_sym = 1 / (1 + C_sym * G_sym);
+
+% 4. Apply the Final Value Theorem
+FVT_result = limit(s * W_sym * U_s, s, 0);
+
+% 5. Solve for the exact Kc boundary
+% This limit is what the requirement had in the question
+% There's a big catch here: If the exam_limit = 0, then you can simply assume K_c = 1, otherwise do these:
+exam_limit = 0.25;
+Kc_solutions = solve(abs(FVT_result) == exam_limit, Kc);
+Kc_min = double(max(Kc_solutions));
+
+disp(Kc_min);
+```
+ Like this you'll have your $K_c$ but it's always nice to round $K_c$ up a bit for example:
+ - If $K_c$ is 1.968 $\rightarrow$ use 2.0
+- If $K_c$ is 0.812 $\rightarrow$ use 0.85
+- If $K_c$ is 14.1 $\rightarrow$ use 15
+## Phase 3 (Nichols Loop Shaping)
+Before starting this phase, you need to define $K_c$ and Controller using standard `tf` variables:
+```matlab
+Kc = 2.0; % The safe value you found in Phase 2
+Css = Kc / s; % Use Kc/s if h=1, Kc/s^2 if h=2, or just Kc if h=0
+C = Css;
+```
+### Step 1 (Translate Requirements to Math)
+#### 1) High-Frequency Noise $(|y_{d_t}^\infty|) \to$ Attenuation Boundary $(M_{T\_HF})$
+The input of $|y_{d_t}^\infty|$ is always going to be sinusoidal. So it will be skipped in Phase 2.
+- **Formula:**
+$$
+M_{T\_HF} =  20 \log_{10}\left(\frac{\text{Output Limit}}{\text{Input Amplitude}}\right)
+$$
+- **Example:** If $d_t(t) = 0.1\sin(90t)$ and limit is $\le 0.01$, then $M_{T\_HF} = 20 \log_{10}\left(\frac{0.01}{0.1}\right) = -20 \text{ dB}$.
+#### 2) Rise Time $(t_r) \to$ Target Crossover Frequency $(\omega_{c,des})$
+- **Formula:**
+$$
+\omega_{c,des} \ge \frac{1.8}{t_r}
+$$
+#### 3) Overshoot ($\hat{S}$) $\to$ Nichols Exclusion Circles ($T_p$ and $S_p$)
+Open the `diagrams_translation_requirements.pdf` file provided during the exam and follow these three steps:
+- **Find $\zeta$:** Go to the first chart ($\hat{S}$ vs $\zeta$). Find your maximum overshoot percentage on the Y-axis (e.g., 20), trace horizontally to the curve, and read the corresponding $\zeta$ value on the X-axis.
+- **Find $T_p$:** Go to the second chart ($d$ or $T_p$ vs $\zeta$). Find your $\zeta$ on the X-axis, trace vertically to the curve, and read the $T_p$ value on the Y-axis.
+- **Find $S_p$:** Go to the third chart ($S$ vs $\zeta$). Find your $\zeta$ on the X-axis, trace vertically to the curve, and read the $S_p$ value on the Y-axis.
+Once you read the linear values from the charts, convert them to dB in MATLAB:
+```matlab
+% Example values read from the PDF charts
+T_p_linear = 1.23;
+S_p_linear = 1.53;
+
+T_p = 20 * log10(T_p_linear);
+S_p = 20 * log10(S_p_linear);
+```
+
+So at the end you'll have these:
+```matlab
+wc_des = 1.85 / t_r_limit;
+M_T_HF = 20 * log10(noise_output_limit / noise_input_amp);
+T_p = 20 * log10(Tp_linear);
+S_p = 20 * log10(S_p_linear);
+```
+### Step 2 (The Initial Plot)
+**The Goal:** Before we start fixing the system, we need to see how bad the baseline is. By plotting the plant ($G$), the delay ($G_{ZOH}$), and our steady-state controller ($C_{ss}$), we can see exactly where the system naturally wants to go and which exclusion zones it violates.
+
+**The Action:** We multiply them together to create the initial open-loop transfer function ($L_1$) and plot it against our target grids.
+```matlab
+L1 = C * G * G_ZOH;
+figure(1)
+nichols(L1)
+hold on
+T_grid(T_p)
+S_grid(S_p)
+T_grid(M_T_HF)
+```
+#### How to read the Nichols Chart
+![[Pasted image 20260615123923.png]]
+- **The Axes:** The x-axis is Phase (deg) and y-axis is Gain (dB)
+- **The Black Line:** This represents our system, we need to change it according to the needs.
+- **The Hidden Frequency $(\omega)$:** The top of the system line represents slow frequencies $(\omega \approx 0)$. As you trace the line downward the frequency increases. Very bottom *(tail)* of our system line represents the high frequencies $(\omega \to \infty)$.
+- **The Danger Zone (Center Circles):** The red $(S_p)$ and blue $(T_p)$ circles in the middle. Our system line *must* stay completely to the *right and bottom* of these circles.
+- **The Noise Ceiling:** This is the $M_{T\_HF}$ limit (a horizontal line, like -41.93 dB). The specific "mile marker" on your curve that corresponds to the exam's noise frequency (e.g., $\omega_t = 100$ rad/s) *must sit completely below* this line.
+- **The Speed Line (0 dB Axis):** The horizontal 0dB line determines system speed. The specific frequency that crosses this 0 dB line becomes your actual crossover frequency $(\omega_c)$.
+### Step 3 (Move 1: The Phase Shift - Dodging the Danger Zone)
+**The Goal:** Your initial $L_1$ curve will likely crash into the left side of the $T_p$ and $S_p$ circles. We need to physically pull the curve to the _right_ to dodge them and create a safe phase margin.
+
+**The Action:** Adding a **Real Negative Zero** adds phase lead (pulls the curve right). You should always start with a single zero to avoid amplifying high-frequency noise unnecessarily. If a single zero isn't strong enough to pull the curve past the circles, upgrade to a double zero.
+
+Anchor the zero slightly behind your target crossover frequency ($\omega_{c,des}$) using a tuning factor (`wnorm`), usually between **2 and 6**.
+```matlab
+wnorm = 3; % TUNE THIS: Adjust between 2 and 6
+wZ = wc_des / wnorm;
+C_Z = 1 + (s / wZ);
+
+% Try Option A first. Run the script.
+% If the green line still crashes into the circles, comment it out and use Option B.
+
+% Option A: Single Zero (Moderate Pull)
+C = C * C_Z; 
+% Option B: Double Zero (Heavy Pull)
+% C = C * C_Z * C_Z; 
+
+L2 = C * G * G_ZOH;
+nichols(L2, 'g'); % Plot the new shape in green
+```
